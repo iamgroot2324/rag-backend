@@ -1,0 +1,96 @@
+{
+  "info": {
+    "name": "RAG Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8000" },
+    { "key": "sessionId", "value": "demo-session-1" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": { "method": "GET", "url": "{{baseUrl}}/health" }
+    },
+    {
+      "name": "Upload document (fixed chunking)",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/v1/documents",
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "file", "type": "file", "src": "" },
+            { "key": "strategy", "value": "fixed", "type": "text" },
+            { "key": "chunk_size", "value": "1000", "type": "text" },
+            { "key": "chunk_overlap", "value": "150", "type": "text" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Upload document (sentence chunking)",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/v1/documents",
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "file", "type": "file", "src": "" },
+            { "key": "strategy", "value": "sentence", "type": "text" },
+            { "key": "chunk_size", "value": "800", "type": "text" },
+            { "key": "chunk_overlap", "value": "100", "type": "text" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Chat: ask a question",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/v1/chat",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session_id\": \"{{sessionId}}\",\n  \"message\": \"What does the document say about the main topic?\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Chat: follow-up (multi-turn)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/v1/chat",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session_id\": \"{{sessionId}}\",\n  \"message\": \"Can you explain that in more detail?\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Chat: start interview booking",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/v1/chat",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session_id\": \"{{sessionId}}\",\n  \"message\": \"I'd like to book an interview. My name is Sugam.\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Chat: provide email, date and time",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/v1/chat",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"session_id\": \"{{sessionId}}\",\n  \"message\": \"sugam@example.com, next Monday at 3pm\"\n}"
+        }
+      }
+    }
+  ]
+}
